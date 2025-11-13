@@ -1,0 +1,121 @@
+.admin-dashboard {
+  padding: 2rem 0;
+}
+
+.admin-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+table th,
+table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: left;
+  color: var(--text-color);
+}
+
+table thead {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+table select {
+  background-color: #252540;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+}
+
+.table-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.comments-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.comment-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.comment-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  color: var(--text-muted);
+}
+
+.comment-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.empty-state {
+  color: var(--text-muted);
+}
+
+.loading {
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.alert {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid transparent;
+}
+
+.alert-error {
+  background-color: rgba(240, 17, 17, 0.15);
+  border-color: rgba(240, 17, 17, 0.4);
+  color: var(--secondary-color);
+}
+
+.alert-success {
+  background-color: rgba(76, 175, 80, 0.12);
+  border-color: rgba(76, 175, 80, 0.35);
+  color: #a5d6a7;
+}
+
+@media (max-width: 768px) {
+  .comments-list {
+    grid-template-columns: 1fr;
+  }
+
+  table th,
+  table td {
+    padding: 0.75rem;
+  }
+}

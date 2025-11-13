@@ -1,0 +1,28 @@
+:root {
+  --primary-color: #8b5ee7;
+  --secondary-color: #f01111;
+  --dark-color: #1a1a2e;
+  --light-color: #f5f5f5;
+  --text-color: #ffffff;
+  --text-muted: #b3b3b3;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--dark-color);
+  color: var(--text-color);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+

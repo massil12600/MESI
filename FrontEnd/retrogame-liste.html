@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste de Jeux - Retro Game Universe</title>
+    <style>
+        :root {
+            --primary-color: #8b5ee7;
+            --secondary-color: #f01111;
+            --dark-color: #1a1a2e;
+            --light-color: #f5f5f5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark-color);
+            color: white;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: rgb(252, 252, 252);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            color: #4b82e0;
+        }
+        
+        nav ul {    
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        nav ul li a:hover {
+            color: #ffcc00;
+        }
+        
+        nav ul li a.active {
+            color: #ffcc00;
+            font-weight: 700;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+        }
+        
+        .btn-login {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .btn-signup {
+            background-color: #ffcc00;
+            color: var(--dark-color);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .page-title {
+            text-align: center;
+            padding: 3rem 0 1rem;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        
+        .title-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .description {
+            text-align: center;
+            color: #b3b3b3;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .filter-section {
+            margin-bottom: 3rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+        
+        .filter-controls {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .filter-control {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 4px;
+            border: 1px solid #444;
+            background-color: #252540;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .filter-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .btn-filter {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-filter:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .game-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        .game-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .game-info {
+            padding: 1.5rem;
+        }
+        
+        .game-info h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .game-info p {
+            color: #b3b3b3;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .rating {
+            color: #ffcc00;
+        }
+        
+        .players {
+            color: #b3b3b3;
+            font-size: 0.9rem;
+        }
+        
+        .game-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .game-tag {
+            background-color: rgba(139, 94, 231, 0.2);
+            color: var(--primary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .game-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .play-now {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .play-now:hover {
+            background-color: #7a48d9;
+            transform: translateY(-3px);
+        }
+        
+        .add-favorite {
+            background-color: transparent;
+            border: 1px solid var(--secondary-color);
+            color: var(--secondary-color);
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .add-favorite:hover {
+            background-color: rgba(240, 17, 17, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .page-link {
+            display: inline-block;
+            padding: 0.8rem 1.2rem;
+            margin: 0 0.3rem;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .page-link:hover,
+        .page-link.active {
+            background-color: var(--primary-color);
+        }
+        
+        footer {
+            background-color: #121212;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-section ul li a {
+            color: #b3b3b3;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-section ul li a:hover {
+            color: var(--primary-color);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid #2c2c2c;
+            color: #b3b3b3;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow: auto;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #1a1a2e;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: #b3b3b3;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            color: white;
+        }
+        
+        .form-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: white;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #b3b3b3;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 4px;
+            border: 1px solid #444;
+            background-color: #252540;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .form-text {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 0.5rem;
+        }
+        
+        .form-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .form-btn:hover {
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #b3b3b3;
+        }
+        
+        .form-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .filter-controls {
+                flex-direction: column;
+            }
+            
+            .auth-buttons {
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">RetroGame<span>Universe</span></a>
+                <nav>
+                    <ul>
+                        <li><a href="file:///C:/Users/jilva/Documents/LES%20TRAVAUX%20IPI/RETRO%20GAMER%20UNIVERSE%20PROJET%20MESI/MISE%20EN%20PROJET/RetrogameUniverse_violet_3.html">Accueil</a></li>
+                        <li><a href="file:///C:/Users/jilva/Documents/LES%20TRAVAUX%20IPI/RETRO%20GAMER%20UNIVERSE%20PROJET%20MESI/MISE%20EN%20PROJET/JEUX_PAGE/retrogame-liste.html">Jeux</a></li>
+                        <li><a href="file:///C:/Users/jilva/Documents/LES%20TRAVAUX%20IPI/RETRO%20GAMER%20UNIVERSE%20PROJET%20MESI/MISE%20EN%20PROJET/CATALOGUE/catalogue-page.html" class="active">Catalogue</a></li>
+                        <li><a href="#">Classements</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    <button class="btn btn-login" onclick="openModal('loginModal')">Connexion</button>
+                    <button class="btn btn-signup" onclick="openModal('signupModal')">Inscription</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="title-container">
+                <h1 class="page-title">Liste de Jeux</h1>
+                <p class="description">Découvrez notre vaste collection de jeux rétro et modernes. Filtrez par genre, évaluation, ou difficulté pour trouver votre prochain jeu préféré.</p>
+            </div>
+            
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <form id="filter-form">
+                    <div class="filter-controls">
+                        <div class="filter-group">
+                            <label for="genre">Genre</label>
+                            <select id="genre" class="filter-control">
+                                <option value="">Tous les genres</option>
+                                <option value="action">Action</option>
+                                <option value="adventure">Aventure</option>
+                                <option value="rpg">RPG</option>
+                                <option value="strategy">Stratégie</option>
+                                <option value="puzzle">Puzzle</option>
+                                <option value="sport">Sport</option>
+                                <option value="racing">Course</option>
+                                <option value="arcade">Arcade</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="rating">Évaluation minimum</label>
+                            <select id="rating" class="filter-control">
+                                <option value="">Toutes les évaluations</option>
+                                <option value="5">5 étoiles</option>
+                                <option value="4">4 étoiles et plus</option>
+                                <option value="3">3 étoiles et plus</option>
+                                <option value="2">2 étoiles et plus</option>
+                                <option value="1">1 étoile et plus</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="difficulty">Difficulté</label>
+                            <select id="difficulty" class="filter-control">
+                                <option value="">Toutes les difficultés</option>
+                                <option value="easy">Facile</option>
+                                <option value="medium">Moyen</option>
+                                <option value="hard">Difficile</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="sort">Trier par</label>
+                            <select id="sort" class="filter-control">
+                                <option value="popularity">Popularité</option>
+                                <option value="rating">Évaluation</option>
+                                <option value="date">Date de sortie</option>
+                                <option value="name">Nom (A-Z)</option>
+                            </select>
+                        </div>
+                        <div class="filter-group" style="display: flex; align-items: flex-end;">
+                            <button type="submit" class="btn-filter">Appliquer les filtres</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Games Grid -->
+            <div class="games-grid">
+                <!-- Game 1 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Fire Emblem" class="game-img">
+                    <div class="game-info">
+                        <h3>Fire Emblem</h3>
+                        <p>Un jeu de combat stratégique captivant avec des personnages légendaires.</p>
+                        <div class="game-meta">
+                            <div class="rating">★★★★☆</div>
+                            <div class="players">10K+ joueurs</div>
+                        </div>
+                        <div class="game-tags">
+                            <span class="game-tag">Action</span>
+                            <span class="game-tag">Stratégie</span>
+                        </div>
+                        <div class="game-buttons">
+                            <a href="#" class="play-now">Jouer</a>
+                            <a href="#" class="add-favorite">Favori</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 2 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Mario Kart" class="game-img">
+                    <div class="game-info">
+                        <h3>Mario Kart</h3>
+                        <p>Une course effrénée à travers des circuits fantastiques.</p>
+                        <div class="game-meta">
+                            <div class="rating">★★★★★</div>
+                            <div class="players">5K+ joueurs</div>
+                        </div>
+                        <div class="game-tags">
+                            <span class="game-tag">Course</span>
+                            <span class="game-tag">Arcade</span>
+                        </div>
+                        <div class="game-buttons">
+                            <a href="#" class="play-now">Jouer</a>
+                            <a href="#" class="add-favorite">Favori</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 3 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="The Legend of Zelda" class="game-img">
+                    <div class="game-info">
+                        <h3>The Legend of Zelda</h3>
+                        <p>Résolvez des énigmes complexes dans un monde magique plein de mystères.</p>
+                        <div class="game-meta">
+                            <div class="rating">★★★★★</div>
+                            <div class="players">8K+ joueurs</div>
+                        </div>
+                        <div class="game-tags">
+                            <span class="game-tag">Puzzle</span>
+                            <span class="game-tag">Aventure</span>
+                        </div>
+                        <div class="game-buttons">
+                            <a href="file:///C:/Users/jilva/Desktop/RGU%20Prototype/test/prototype.html" class="play-now">Jouer</a>
+                            <a href="#" class="add-favorite">Favori</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 4 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Fantasy RPG" class="game-img">
+                    <div class="game-info">
+                        <h3>Fantasy RPG</h3>
+                        <p>Explorez un vaste monde fantasy avec votre héros personnalisé.</p>
+                        <div class="game-meta">
+                            <div class="rating">★★★★☆</div>
+                            <div class="players">2K+ joueurs</div>
+                        </div>
+                        <div class="game-tags">
+                            <span class="game-tag">RPG</span>
+                            <span class="game-tag">Fantaisie</span>
+                        </div>
+                        <div class="game-buttons">
+                            <a href="#" class="play-now">Jouer</a>
+                            <a href="#" class="add-favorite">Favori</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 5 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Metroid" class="game-img">
+                    <div class="game-info">
+                        <h3>Metroid</h3>
+                        <p>Explorez les confins de l'univers et sauvez la galaxie.</p>
+                        <div class="game-meta">
+                            <div class="rating">★★★★☆</div>
+                            <div class="players">7K+ joueurs</div>
+                        </div>
+                        <div class="game-tags">
+                            <span class="game-tag">Aventure</span>
+                            <span class="game-tag">Sci-Fi</span>
+                        </div>
+                        <div class="game-buttons">
+                            <a href="#" class="play-now">Jouer</a>
+                            <a href="#" class="add-favorite">Favori</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 6 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Football Game" class="game-img">
+                    <div class="game-info">
+                        <h3>Football Game</h3>
+                        <p>Dirigez votre équipe vers la coupe du monde.</p>
+                        <div class="game-meta">
+                            <div class="rating">★★★★☆</div>
+                            <div class="players">2K+ joueurs</div>
+                        </div>
+                        <div class="game-tags">
+                            <span class="game-tag">Sport</span>
+                            <span class="game-tag">Simulation</span>
+                        </div>
+                        <div class="game-buttons">
+                            <a href="#" class="play-now">Jouer</a>
+                            <a href="#" class="add-favorite">Favori</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 7 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Zombie Survival" class="game-img">
+                    <div class="game-info">
+                        <h3>Zombie Survival</h3>
+                        <p>Survivez à l'apocalypse zombie et trouvez un remède.</p>
+                        <div class="game-meta">
+                            <div class="rating">★★★★★</div>
+                            <div class="players">1K+ joueurs</div>
+                        </div>
+                        <div class="game-tags">
+                            <span class="game-tag">Action</span>
+                            <span class="game-tag">Survie</span>
+                        </div>
+                        <div class="game-buttons">
+                            <a href="#" class="play-now">Jouer</a>
+                            <a href="#" class="add-favorite">Favori</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 8 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Treasure Hunt" class="game-img">
+                    <div class="game-info">
+                        <h3>Treasure Hunt</h3>
+                        <p>Partez à la recherche de trésors cachés dans des lieux exotiques.</p>
+                        <div class="game-meta">
+                            <div class="rating">★★★☆☆</div>
+                            <div class="players">5K+ joueurs</div>
+                        </div>
+                        <div class="game-tags">
+                            <span class="game-tag">Aventure</span>
+                            <span class="game-tag">Puzzle</span>
+                        </div>
+                        <div class="game-buttons">
+                            <a href="#" class="play-now">Jouer</a>
+                            <a href="#" class="add-favorite">Favori</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 9 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Medieval Kingdom" class="game-img">
+                    <div class="game-info">
+                        <h3>Medieval Kingdom</h3>
+                        <p>Bâtissez et gérez votre royaume médiéval dans un monde en guerre.</p>
+                        <div class="game-meta">
+                            <div class="rating">★★★★☆</div>
+                            <div class="players">11K+ joueurs</div>
+                        </div>
+                        <div class="game-tags">
+                            <span class="game-tag">Stratégie</span>
+                            <span class="game-tag">Simulation</span>
+                        </div>
+                        <div class="game-buttons">
+                            <a href="#" class="play-now">Jouer</a>
+                            <a href="#" class="add-favorite">Favori</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 10 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Pixel Shooter" class="game-img">
+                    <div class="game-info">
+                        <h3>Pixel Shooter</h3>
+                        <p>Un shooter rétro avec des graphismes pixelisés et une action intense.</p>
+                        <div class="game-meta">
+                            <div class="rating">★★★★★</div>
+                            <div class="players">14K+ joueurs</div>
+                        </div>
+                        <div class="game-tags">
+                            <span class="game-tag">Action</span>
+                            <span class="game-tag">Rétro</span>
+                        </div>
+                        <div class="game-buttons">
+                            <a href="#" class="play-now">Jouer</a>
+                            <a href="#" class="add-favorite">Favori</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 11 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Magic Duel" class="game-img">
+                    <div class="game-info">
+                        <h3>Magic Duel</h3>
+                        <p>Affrontez d'autres joueurs dans des duels de magie épiques.</p>
+                        <div class="game-meta">
+                            <div class="rating">★★★★☆</div>
+                            <div class="players">8K+ joueurs</div>
+                        </div>
+                        <div class="game-tags">
+                            <span class="game-tag">Cartes</span>
+                            <span class="game-tag">Stratégie</span>
+                        </div>
+                        <div class="game-buttons">
+                            <a href="#" class="play-now">Jouer</a>
+                            <a href="#" class="add-favorite">Favori</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 12 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Retro Tennis" class="game-img">
+                    <div class="game-info">
+                        <h3>Retro Tennis</h3>
+                        <p>Un jeu de tennis classique avec des contrôles simples et addictifs.</p>
+                        <div class="game-meta">
+                            <div class="rating">★★★☆☆</div>
+                            <div class="players">6K+ joueurs</div>
+                        </div>
+                        <div class="game-tags">
+                            <span class="game-tag">Sport</span>
+                            <span class="game-tag">Arcade</span>
+                        </div>
+                        <div class="game-buttons">
+                            <a href="#" class="play-now">Jouer</a>
+                            <a href="#" class="add-favorite">Favori</a>
+                

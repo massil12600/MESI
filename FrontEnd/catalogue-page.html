@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogue de Jeux - RetroGame Universe</title>
+    <style>
+        :root {
+            --primary-color: #8b5ee7;
+            --secondary-color: #f01111;
+            --dark-color: #1a1a2e;
+            --light-color: #f5f5f5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark-color);
+            color: white;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: rgb(252, 252, 252);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            color: #4b82e0;
+        }
+        
+        nav ul {    
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        nav ul li a:hover {
+            color: #ffcc00;
+        }
+        
+        nav ul li a.active {
+            color: #ffcc00;
+            font-weight: 700;
+            position: relative;
+        }
+        
+        nav ul li a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #ffcc00;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+        }
+        
+        .btn-login {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .btn-signup {
+            background-color: #ffcc00;
+            color: var(--dark-color);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Page Title */
+        .page-title {
+            padding: 3rem 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/api/placeholder/1200/300');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+        }
+        
+        .page-title h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .page-title p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+            color: #e0e0e0;
+        }
+        
+        /* Catalogue Content */
+        .catalogue-section {
+            padding: 4rem 0;
+        }
+        
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border-radius: 25px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #b3b3b3;
+        }
+        
+        .filter-dropdown {
+            padding: 0.7rem 1rem;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .filter-dropdown:focus {
+            outline: none;
+        }
+        
+        /* Categories */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .category-card {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/api/placeholder/300/200');
+            background-size: cover;
+            background-position: center;
+            height: 180px;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+        
+        .category-card:hover::before {
+            opacity: 0.8;
+        }
+        
+        .category-name {
+            position: relative;
+            z-index: 1;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 0 1rem;
+        }
+        
+        .category-count {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: white;
+            z-index: 1;
+        }
+        
+        /* Featured Games */
+        .section-title {
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            color: white;
+            position: relative;
+            padding-left: 1rem;
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 70%;
+            width: 5px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 3px;
+        }
+        
+        .games-slider {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .game-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        .game-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .game-info {
+            padding: 1.2rem;
+        }
+        
+        .game-info h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .category-tag {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background-color: rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-bottom: 0.8rem;
+            color: #e0e0e0;
+        }
+        
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+        
+        .rating {
+            color: #ffcc00;
+        }
+        
+        .play-now {
+            color: var(--primary-color);
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .play-now:hover {
+            text-decoration: underline;
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 3rem;
+        }
+        
+        .pagination-item {
+            margin: 0 0.3rem;
+        }
+        
+        .pagination-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .pagination-link:hover, .pagination-link.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #121212;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-section ul li a {
+            color: #b3b3b3;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-section ul li a:hover {
+            color: var(--primary-color);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid #2c2c2c;
+            color: #b3b3b3;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow: auto;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #1a1a2e;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: #b3b3b3;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            color: white;
+        }
+        
+        .form-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: white;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #b3b3b3;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 4px;
+            border: 1px solid #444;
+            background-color: #252540;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .form-text {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 0.5rem;
+        }
+        
+        .form-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .form-btn:hover {
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #b3b3b3;
+        }
+        
+        .form-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem;
+            }
+            
+            .auth-buttons {
+                margin-top: 1rem;
+            }
+            
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                max-width: 100%;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">RetroGame<span>Universe</span></a>
+                <nav>
+                    <ul>
+                        <li><a href="file:///C:/Users/jilva/Documents/LES%20TRAVAUX%20IPI/RETRO%20GAMER%20UNIVERSE%20PROJET%20MESI/RetrogameUniverse_violet_3.html">Accueil</a></li>
+                        <li><a href="file:///C:/Users/jilva/Documents/LES%20TRAVAUX%20IPI/RETRO%20GAMER%20UNIVERSE%20PROJET%20MESI/retrogame-catalogue-page.html#">Jeux</a></li>
+                        <li><a href="file:///C:/Users/jilva/Documents/LES%20TRAVAUX%20IPI/RETRO%20GAMER%20UNIVERSE%20PROJET%20MESI/CATALOGUE/catalogue-page.html" class="active">Catalogue</a></li>
+                        <li><a href="#">Classements</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    <button class="btn btn-login" onclick="openModal('loginModal')">Connexion</button>
+                    <button class="btn btn-signup" onclick="openModal('signupModal')">Inscription</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Title -->
+    <section class="page-title">
+        <div class="container">
+            <h1>Catalogue de Jeux</h1>
+            <p>Découvrez notre vaste collection de jeux en ligne classés par catégories et adaptés à tous les types de joueurs.</p>
+        </div>
+    </section>
+
+    <!-- Catalogue Content -->
+    <section class="catalogue-section">
+        <div class="container">
+            <!-- Filters -->
+            <div class="filters">
+                <div class="search-box">
+                    <input type="text" placeholder="Rechercher un jeu...">
+                </div>
+                <div class="filter-options">
+                    <select class="filter-dropdown">
+                        <option value="">Trier par: Populaire</option>
+                        <option value="recent">Plus récent</option>
+                        <option value="rating">Meilleures notes</option>
+                        <option value="az">A-Z</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Categories Grid -->
+            <div class="categories-grid">
+                <!-- Category 1 -->
+                <a href="#" class="category-card">
+                    <h3 class="category-name">Action</h3>
+                    <span class="category-count">22 jeux</span>
+                </a>
+                
+                <!-- Category 2 -->
+                <a href="#" class="category-card">
+                    <h3 class="category-name">Aventure</h3>
+                    <span class="category-count">18 jeux</span>
+                </a>
+                
+                <!-- Category 3 -->
+                <a href="#" class="category-card">
+                    <h3 class="category-name">Stratégie</h3>
+                    <span class="category-count">17 jeux</span>
+                </a>
+                
+                <!-- Category 4 -->
+                <a href="#" class="category-card">
+                    <h3 class="category-name">RPG</h3>
+                    <span class="category-count">11 jeux</span>
+                </a>
+                
+                <!-- Category 5 -->
+                <a href="#" class="category-card">
+                    <h3 class="category-name">Puzzle</h3>
+                    <span class="category-count">12 jeux</span>
+                </a>
+                
+                <!-- Category 6 -->
+                <a href="#" class="category-card">
+                    <h3 class="category-name">Course</h3>
+                    <span class="category-count">19 jeux</span>
+                </a>
+                
+                <!-- Category 7 -->
+                <a href="#" class="category-card">
+                    <h3 class="category-name">Sports</h3>
+                    <span class="category-count">22 jeux</span>
+                </a>
+                
+                <!-- Category 8 -->
+                <a href="#" class="category-card">
+                    <h3 class="category-name">Arcade</h3>
+                    <span class="category-count">15 jeux</span>
+                </a>
+            </div>
+
+            <!-- Featured Games Section -->
+            <h2 class="section-title">Jeux tendance</h2>
+            <div class="games-slider">
+                <!-- Game 1 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="The Legend of Zelda" class="game-img">
+                    <div class="game-info">
+                        <span class="category-tag">Action</span>
+                        <h3>The Legend of Zelda</h3>
+                        <div class="game-meta">
+                            <div class="rating">★★★★★</div>
+                            <a href="file:///C:/Users/jilva/Desktop/RGU%20Prototype/test/prototype.html" class="play-now">Jouer</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 2 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Dragon Quest" class="game-img">
+                    <div class="game-info">
+                        <span class="category-tag">Aventure</span>
+                        <h3>Dragon Quest</h3>
+                        <div class="game-meta">
+                            <div class="rating">★★★★☆</div>
+                            <a href="#" class="play-now">Jouer</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 3 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Kid Icarus" class="game-img">
+                    <div class="game-info">
+                        <span class="category-tag">Action</span>
+                        <h3>Kid Icarus</h3>
+                        <div class="game-meta">
+                            <div class="rating">★★★★☆</div>
+                            <a href="#" class="play-now">Jouer</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 4 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Maria Kart" class="game-img">
+                    <div class="game-info">
+                        <span class="category-tag">Course</span>
+                        <h3>Maria Kart</h3>
+                        <div class="game-meta">
+                            <div class="rating">★★★★★</div>
+                            <a href="#" class="play-now">Jouer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nouveautés Section -->
+            <h2 class="section-title">Derniers ajouts</h2>
+            <div class="games-slider">
+                <!-- Game 1 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Zombie Survival" class="game-img">
+                    <div class="game-info">
+                        <span class="category-tag">Survie</span>
+                        <h3>Zombie Survival</h3>
+                        <div class="game-meta">
+                            <div class="rating">★★★★☆</div>
+                            <a href="#" class="play-now">Jouer</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 2 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Ice Climber" class="game-img">
+                    <div class="game-info">
+                        <span class="category-tag">Plateforme</span>
+                        <h3>Ice Climber</h3>
+                        <div class="game-meta">
+                            <div class="rating">★★★☆☆</div>
+                            <a href="#" class="play-now">Jouer</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 3 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Mystic Lands" class="game-img">
+                    <div class="game-info">
+                        <span class="category-tag">RPG</span>
+                        <h3>Mystic Lands</h3>
+                        <div class="game-meta">
+                            <div class="rating">★★★★★</div>
+                            <a href="#" class="play-now">Jouer</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 4 -->
+                <div class="game-card">
+                    <img src="/api/placeholder/300/180" alt="Fire Emblem" class="game-img">
+                    <div class="game-info">
+                        <span class="category-tag">Stratégie</span>
+                        <h3>Fire Emblem</h3>
+                        <div class="game-meta">
+                            <div class="rating">★★★★☆</div>
+                            <a href="#" class="play-now">Jouer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <div class="pagination-item">
+                    <a href="#" class="pagination-link active">1</a>
+                </div>
+                <div class="pagination-item">
+                    <a href="#" class="pagination-link">2</a>
+                </div>
+                <div class="pagination-item">
+                    <a href="#" class="pagination-link">3</a>
+                </div>
+                <div class="pagination-item">
+                    <a href="#" class="pagination-link">4</a>
+                </div>
+                <div class="pagination-item">
+                    <a href="#" class="pagination-link">5</a>
+                </div>
+                <div class="pagination-item">
+                    <a href="#" class="pagination-link">→</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>À propos</h3>
+                    <ul>
+                        <li><a href="#">Notre histoire</a></li>
+                        <li><a href="#">Équipe</a></li>
+                        <li><a href="#">Carrières</a></li>
+                        <li><a href="#">Mentions légales</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Signaler un bug</a></li>
+                        <li><a href="#">Aide</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Catégories</h3>
+                    <ul>
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Aventure</a></li>
+                        <li><a href="#">Sports</a></li>
+                        <li><a href="#">Stratégie</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Nous suivre</h3>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Discord</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Retro Game Universe. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
+            <h2 class="form-title">Connexion</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Mot de passe</label>
+                    <input type="password" id="loginPassword" class="form-control" required>
+                </div>
+                <button type="submit" class="form-btn">Se connecter</button>
+                <div class="form-footer">
+                    <p>Pas encore inscrit? <a href="#" onclick="switchModal('loginModal', 'signupModal')">Créer un compte</a></p>
+                    <p><a href="#">Mot de passe oublié?</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('signupModal')">&times;</span>
+            <h2 class="form-title">Créer un compte</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupUsername">Nom d'utilisateur</label>
+                    <input type="text" id="signupUsername" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Mot de passe</label>
+                    <input type="password" id="signupPassword" class="form-control" required>
+                    <small class="form-text">Le mot de passe doit contenir au moins 8 caractères.</small>
+                </div>
+                <div class="

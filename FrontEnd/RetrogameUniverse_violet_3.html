@@ -1,0 +1,682 @@
+i<!DOCTYPE html>
+<html lang="fr">
+<head>  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Game Univers - Votre portail de jeux en ligne</title>
+    <style>
+        :root {
+            --primary-color: #8b5ee7;
+            --secondary-color: #f01111;
+            --dark-color: #1a1a2e;
+            --light-color: #f5f5f5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark-color);
+            color: white;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: rgb(252, 252, 252);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            color: #4b82e0;
+        }
+        
+        nav ul {    
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        nav ul li a:hover {
+            color: #ffcc00;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+        }
+        
+        .btn-login {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .btn-signup {
+            background-color: #ffcc00;
+            color: var(--dark-color);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero {
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            background-image: url('/api/placeholder/1200/600');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #e0e0e0;
+        }
+        
+        .btn-play {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-size: 1.2rem;
+            padding: 0.8rem 2rem;
+        }
+        
+        .games-section {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        
+        .title-container {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .game-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        .game-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .game-info {
+            padding: 1.5rem;
+        }
+        
+        .game-info h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .game-info p {
+            color: #b3b3b3;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .rating {
+            color: #ffcc00;
+        }
+        
+        .play-now {
+            color: var(--primary-color);
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .play-now:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            background-color: #121212;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-section ul li a {
+            color: #b3b3b3;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-section ul li a:hover {
+            color: var(--primary-color);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid #2c2c2c;
+            color: #b3b3b3;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow: auto;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #1a1a2e;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: #b3b3b3;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            color: white;
+        }
+        
+        .form-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: white;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #b3b3b3;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 4px;
+            border: 1px solid #444;
+            background-color: #252540;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .form-text {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 0.5rem;
+        }
+        
+        .form-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .form-btn:hover {
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #b3b3b3;
+        }
+        
+        .form-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .auth-buttons {
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">RetroGame<span>Universe</span></a>
+                <nav>
+                    <ul>
+                        <li><a href="file:///C:/Users/jilva/Documents/LES%20TRAVAUX%20IPI/RETRO%20GAMER%20UNIVERSE%20PROJET%20MESI/RetrogameUniverse_violet_3.html">Accueil</a></li>
+                        <li><a href="file:///C:/Users/jilva/Documents/LES%20TRAVAUX%20IPI/RETRO%20GAMER%20UNIVERSE%20PROJET%20MESI/retrogame-catalogue-page.html">Jeux</a></li>
+                        <li><a href="file:///C:/Users/jilva/Documents/LES%20TRAVAUX%20IPI/RETRO%20GAMER%20UNIVERSE%20PROJET%20MESI/CATALOGUE/catalogue-page.html">Catalogues</a></li>
+                        <li><a href="#">Classements</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    <button class="btn btn-login" onclick="openModal('loginModal')">Connexion</button>
+                    <button class="btn btn-signup" onclick="openModal('signupModal')">Inscription</button>
+                </div>
+            </div>''
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Explorez l'univers du jeu en ligne</h1>
+                <p>Rejoignez notre communauté de millions de joueurs et découvrez une collection incroyable de jeux gratuits en ligne.</p>
+                <a href="#games" class="btn btn-play">Jouer maintenant</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section id="games" class="games-section">
+        <div class="container">
+            <div class="title-container">
+                <h2 class="section-title">Jeux populaires</h2>
+            </div>
+            <div class="games-grid">
+                <!-- Game 1 -->
+                <div class="game-card">
+                    <img src="c:\Users\jilva\Documents\LES TRAVAUX IPI\RETRO GAMER UNIVERSE PROJET MESI\images\SI_3DSVC_SonicTheHedgehog_image1600w-2417515282.jpg" alt="Jeu 1" class="game-img">
+                    <div class="game-info">
+                        <h3>Sonic The Hedgehog</h3>
+                        <p>Action, Stratégie</p>
+                        <div class="game-meta">
+                            <div class="rating">★★★★☆</div>
+                            <a href="#" class="play-now">Jouer</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 2 -->
+                <div class="game-card">
+                    <img src="c:\Users\jilva\Documents\LES TRAVAUX IPI\RETRO GAMER UNIVERSE PROJET MESI\images\Super-Mario-Kart-2128066816.jpg" alt="Jeu 2" class="game-img">
+                    <div class="game-info">
+                        <h3>Mario Kart</h3>
+                        <p>Course, Arcade</p>
+                        <div class="game-meta">
+                            <div class="rating">★★★★★</div>
+                            <a href="#" class="play-now">Jouer</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 3 -->
+                <div class="game-card">
+                    <img src="c:\Users\jilva\Documents\LES TRAVAUX IPI\RETRO GAMER UNIVERSE PROJET MESI\images\VisualHistoryOfLink_082214_1080p-1409790021339-2395962416.jpg" alt="Jeu 3" class="game-img">
+                    <div class="game-info">
+                        <h3>The Legend of Zelda </h3>
+                        <p>Puzzle, Aventure</p>
+                        <div class="game-meta">
+                            <div class="rating">★★★★☆</div>
+                            <a href="file:///C:/Users/jilva/Desktop/RGU%20Prototype/test/prototype.html" class="play-now">Jouer</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game 4 -->
+                <div class="game-card">
+                    <img src="c:\Users\jilva\Documents\LES TRAVAUX IPI\RETRO GAMER UNIVERSE PROJET MESI\images\rpgs-blog-4188894377.jpg" alt="Jeu 4" class="game-img">
+                    <div class="game-info">
+                        <h3>Fantasy RPG</h3>
+                        <p>RPG, Fantaisie</p>
+                        <div class="game-meta">
+                            <div class="rating">★★★★☆</div>
+                            <a href="#" class="play-now">Jouer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>À propos</h3>
+                    <ul>
+                        <li><a href="#">Notre histoire</a></li>
+                        <li><a href="#">Équipe</a></li>
+                        <li><a href="#">Carrières</a></li>
+                        <li><a href="#">Mentions légales</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Signaler un bug</a></li>
+                        <li><a href="#">Aide</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Catégories</h3>
+                    <ul>
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Aventure</a></li>
+                        <li><a href="#">Sports</a></li>
+                        <li><a href="#">Stratégie</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Nous suivre</h3>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Discord</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Retro Game Universe. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
+            <h2 class="form-title">Connexion</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Mot de passe</label>
+                    <input type="password" id="loginPassword" class="form-control" required>
+                </div>
+                <button type="submit" class="form-btn">Se connecter</button>
+                <div class="form-footer">
+                    <p>Pas encore inscrit? <a href="#" onclick="switchModal('loginModal', 'signupModal')">Créer un compte</a></p>
+                    <p><a href="#">Mot de passe oublié?</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('signupModal')">&times;</span>
+            <h2 class="form-title">Créer un compte</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupUsername">Nom d'utilisateur</label>
+                    <input type="text" id="signupUsername" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Mot de passe</label>
+                    <input type="password" id="signupPassword" class="form-control" required>
+                    <small class="form-text">Le mot de passe doit contenir au moins 8 caractères.</small>
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirmPassword">Confirmer le mot de passe</label>
+                    <input type="password" id="signupConfirmPassword" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="termsCheck" required>
+                    <label for="termsCheck">J'accepte les <a href="#">conditions d'utilisation</a> et la <a href="#">politique de confidentialité</a>.</label>
+                </div>
+                <button type="submit" class="form-btn">S'inscrire</button>
+                <div class="form-footer">
+                    <p>Déjà inscrit? <a href="#" onclick="switchModal('signupModal', 'loginModal')">Se connecter</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Open modal function
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "flex";
+        }
+        
+        // Close modal function
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+        
+        // Switch between modals
+        function switchModal(currentModalId, newModalId) {
+            closeModal(currentModalId);
+            setTimeout(() => {
+                openModal(newModalId);
+            }, 300);
+        }
+        
+        // Close modal when clicking outside the modal content
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = "none";
+            }
+        }
+        
+        // Form submission handlers
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Here you would normally send these credentials to your server
+            console.log('Login attempt:', { email, password });
+            
+            // Simulate successful login
+            alert('Connexion réussie!');
+            closeModal('loginModal');
+        });
+        
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('signupUsername').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            
+            // Simple validation
+            if (password !== confirmPassword) {
+                alert('Les mots de passe ne correspondent pas.');
+                return;
+            }
+            
+            if (password.length < 8) {
+                alert('Le mot de passe doit contenir au moins 8 caractères.');
+                return;
+            }
+            
+            // Here you would normally send this data to your server
+            console.log('Registration data:', { username, email, password });
+            
+            // Simulate successful registration
+            alert('Inscription réussie! Vous pouvez maintenant vous connecter.');
+            switchModal('signupModal', 'loginModal');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "game-universe",
+  "version": "1.0.0",
+  "description": "Plateforme de jeux indépendants - Projet MESI",
+  "main": "BackEnd/server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd BackEnd && nodemon server.js",
+    "client": "cd FrontEnd/react-app && npm start",
+    "install-all": "npm install && cd BackEnd && npm install && cd ../FrontEnd/react-app && npm install"
+  },
+  "keywords": [
+    "games",
+    "indie",
+    "platform",
+    "mesi"
+  ],
+  "author": "MESI Team",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.0.2"
+  }
+}
+
