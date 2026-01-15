@@ -7,13 +7,17 @@ const { body, validationResult, query } = require('express-validator');
 // Obtenir tous les jeux (avec filtres et pagination)
 router.get('/', [
   query('genre').optional().isString(),
+  query('genres').optional(),
+  query('platforms').optional(),
   query('search').optional().isString(),
-  query('sort').optional().isIn(['popularity', 'rating', 'date', 'name']),
+  query('q').optional().isString(),
+  query('minRating').optional().isFloat({ min: 0, max: 5 }),
+  query('sort').optional().isIn(['popularity', 'rating', 'date', 'name', 'relevance']),
   query('page').optional().isInt({ min: 1 }),
   query('limit').optional().isInt({ min: 1, max: 100 })
 ], async (req, res) => {
   try {
-    const { genre, search, sort = 'popularity', page = 1, limit = 12 } = req.query;
+    const { genre, genres, platforms, search, q, minRating, sort = 'popularity', page = 1, limit = 12 } = req.query;
     const offset = (page - 1) * limit;
 
     let query = `
@@ -34,20 +38,48 @@ router.get('/', [
 
     const params = [];
 
-    // Filtre par genre
+    // Filtre par genre (simple) ou genres[] (multi)
     if (genre) {
       query += ' AND g.genre = ?';
       params.push(genre);
     }
 
-    // Recherche textuelle
-    if (search) {
+    const normalizeArray = (val) => {
+      if (!val) return [];
+      if (Array.isArray(val)) return val;
+      return String(val).split(',').map(s => s.trim()).filter(Boolean);
+    };
+
+    const genresArr = normalizeArray(genres);
+    if (genresArr.length > 0) {
+      query += ` AND g.genre IN (${genresArr.map(() => '?').join(',')})`;
+      params.push(...genresArr);
+    }
+
+    // Platforms (if your schema has a `platform` column)
+    const platformsArr = normalizeArray(platforms);
+    if (platformsArr.length > 0) {
+      query += ` AND g.platform IN (${platformsArr.map(() => '?').join(',')})`;
+      params.push(...platformsArr);
+    }
+
+    // Recherche textuelle (support q or search)
+    const fullText = q || search;
+    if (fullText) {
       query += ' AND (g.title LIKE ? OR g.description LIKE ? OR g.short_description LIKE ?)';
-      const searchTerm = `%${search}%`;
+      const searchTerm = `%${fullText}%`;
       params.push(searchTerm, searchTerm, searchTerm);
     }
 
     query += ' GROUP BY g.id, u.username';
+
+    // Filtre par note minimale (HAVING since average_rating is aggregate)
+    let havingClause = '';
+    const havingParams = [];
+    if (minRating !== undefined && minRating !== null && minRating !== '') {
+      havingClause = ' HAVING COALESCE(AVG(r.rating),0) >= ?';
+      havingParams.push(parseFloat(minRating));
+    }
 
     // Tri
     switch (sort) {
@@ -67,7 +99,9 @@ router.get('/', [
     }
 
     // Pagination
+    query += havingClause;
     query += ' LIMIT ? OFFSET ?';
+    params.push(...havingParams);
     params.push(parseInt(limit), parseInt(offset));
 
     const [games] = await pool.execute(query, params);
@@ -81,14 +115,36 @@ router.get('/', [
       countParams.push(genre);
     }
 
-    if (search) {
+    if (genresArr.length > 0) {
+      countQuery += ` AND g.genre IN (${genresArr.map(() => '?').join(',')})`;
+      countParams.push(...genresArr);
+    }
+
+    if (platformsArr.length > 0) {
+      countQuery += ` AND g.platform IN (${platformsArr.map(() => '?').join(',')})`;
+      countParams.push(...platformsArr);
+    }
+
+    if (fullText) {
       countQuery += ' AND (g.title LIKE ? OR g.description LIKE ? OR g.short_description LIKE ?)';
-      const searchTerm = `%${search}%`;
+      const searchTerm = `%${fullText}%`;
       countParams.push(searchTerm, searchTerm, searchTerm);
     }
 
-    const [countResult] = await pool.execute(countQuery, countParams);
-    const total = countResult[0].total;
+    // If minRating filter exists, need to count via subquery since it's aggregate
+    let total = 0;
+    if (minRating !== undefined && minRating !== null && minRating !== '') {
+      // count via derived table to apply HAVING
+      const derived = `SELECT g.id FROM games g LEFT JOIN ratings r ON g.id = r.game_id WHERE g.status = 'published'` +
+        (countQuery.includes('AND') ? countQuery.replace("SELECT COUNT(DISTINCT g.id) as total FROM games g WHERE g.status = 'published'", '') : '');
+      // Build a simpler approach: perform the same aggregation query but count rows
+      const countAggQuery = `SELECT COUNT(*) as total FROM (SELECT g.id, COALESCE(AVG(r.rating),0) as average_rating FROM games g LEFT JOIN ratings r ON g.id = r.game_id WHERE g.status = 'published' ${countQuery.replace("SELECT COUNT(DISTINCT g.id) as total FROM games g WHERE g.status = 'published'", '')} GROUP BY g.id HAVING COALESCE(AVG(r.rating),0) >= ?) as t`;
+      const [countAggResult] = await pool.execute(countAggQuery, [...countParams, parseFloat(minRating)]);
+      total = countAggResult[0].total;
+    } else {
+      const [countResult] = await pool.execute(countQuery, countParams);
+      total = countResult[0].total;
+    }
 
     res.json({
       success: true,

@@ -3,12 +3,16 @@ import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import './GamesList.css';
+import SearchBar from '../components/SearchBar';
+import FiltersPanel from '../components/FiltersPanel';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 function GamesList() {
   const [filters, setFilters] = useState({
     genre: '',
+    genres: [],
+    platforms: [],
     search: '',
     sort: 'popularity',
     page: 1
@@ -19,7 +23,13 @@ function GamesList() {
     async () => {
       const params = new URLSearchParams();
       if (filters.genre) params.append('genre', filters.genre);
-      if (filters.search) params.append('search', filters.search);
+      if (filters.search) params.append('q', filters.search);
+      if (filters.genres && filters.genres.length) {
+        filters.genres.forEach(g => params.append('genres', g));
+      }
+      if (filters.platforms && filters.platforms.length) {
+        filters.platforms.forEach(p => params.append('platforms', p));
+      }
       params.append('sort', filters.sort);
       params.append('page', filters.page);
       params.append('limit', 12);
@@ -39,9 +49,12 @@ function GamesList() {
     setFilters(prev => ({ ...prev, [name]: value, page: 1 }));
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    refetch();
+  const handleSearchChange = (value) => {
+    setFilters(prev => ({ ...prev, search: value, page: 1 }));
+  };
+
+  const handlePanelChange = (nextFilters) => {
+    setFilters(prev => ({ ...prev, ...nextFilters, page: 1 }));
   };
 
   return (
@@ -50,52 +63,34 @@ function GamesList() {
         <h1 className="page-title">Catalogue de Jeux</h1>
         
         <div className="filter-section">
-          <form onSubmit={handleSearch}>
-            <div className="filter-controls">
-              <div className="filter-group">
-                <label>Recherche</label>
-                <input
-                  type="text"
-                  name="search"
-                  value={filters.search}
-                  onChange={handleFilterChange}
-                  placeholder="Rechercher un jeu..."
-                  className="filter-control"
-                />
-              </div>
-              <div className="filter-group">
-                <label>Genre</label>
-                <select
-                  name="genre"
-                  value={filters.genre}
-                  onChange={handleFilterChange}
-                  className="filter-control"
-                >
-                  <option value="">Tous les genres</option>
-                  {genresData?.data?.map(genre => (
-                    <option key={genre.id} value={genre.name}>{genre.name}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="filter-group">
-                <label>Trier par</label>
-                <select
-                  name="sort"
-                  value={filters.sort}
-                  onChange={handleFilterChange}
-                  className="filter-control"
-                >
-                  <option value="popularity">Popularité</option>
-                  <option value="rating">Note</option>
-                  <option value="date">Date de sortie</option>
-                  <option value="name">Nom (A-Z)</option>
-                </select>
-              </div>
-              <div className="filter-group">
-                <button type="submit" className="btn btn-primary">Rechercher</button>
-              </div>
+          <div className="filter-controls">
+            <div className="filter-group">
+              <label>Recherche</label>
+              <SearchBar value={filters.search} onChange={handleSearchChange} />
             </div>
-          </form>
+            <div className="filter-group">
+              <label>Filtres</label>
+              <FiltersPanel
+                filters={filters}
+                options={{ genres: genresData?.data?.map(g => g.name) || [] }}
+                onChange={handlePanelChange}
+              />
+            </div>
+            <div className="filter-group">
+              <label>Trier par</label>
+              <select
+                name="sort"
+                value={filters.sort}
+                onChange={handleFilterChange}
+                className="filter-control"
+              >
+                <option value="popularity">Popularité</option>
+                <option value="rating">Note</option>
+                <option value="date">Date de sortie</option>
+                <option value="name">Nom (A-Z)</option>
+              </select>
+            </div>
+          </div>
         </div>
 
         {isLoading ? (
