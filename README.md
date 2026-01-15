@@ -53,10 +53,6 @@ PORT=5000
 JWT_SECRET=votre_secret_jwt
 ```
 
-2. Créer la base de données MySQL :
-```bash
-mysql -u root -p < Database/schema.sql
-```
 
 ### Lancement
 
